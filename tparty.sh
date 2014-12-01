@@ -15,7 +15,11 @@ tr -d '\r' | fmt | while read line ; do
 	tolang=$(rlang)
 	i=maxiter
 	old=$line 
-	new="$(termit $tolang $fromlang "$(termit $fromlang $tolang "$old" | sed 's/^=> //' )" | sed 's/^=> //')"
+	if echo $old | grep . > /dev/null ; then
+		new="$(termit $tolang $fromlang "$(termit $fromlang $tolang "$old" | sed 's/^=> //' )" | sed 's/^=> //')"
+	else
+		new=$old
+	fi
 	while [[ "$old" != "$new" ]] ; do
 		if ( [[ $i -lt 1 ]] || [[ $(echo $new | wc -c) -gt 1023 ]] ) ; then 
 			old=$new
